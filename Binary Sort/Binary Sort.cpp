@@ -43,28 +43,31 @@ public:
             length--;
         }
     }
-    bool add(SinglyLinkedNode* data, int pos)
+    bool add(int data, int pos)
     {
         if (pos > length || pos < 0)
         {
             return false;
         }
+
+        SinglyLinkedNode* node = new SinglyLinkedNode(data);
+
         SinglyLinkedNode* ref = head;
         for (int i = 0; i < pos - 1; i++)
         {
             ref = ref->getNext();
         }
         if (pos == 0)
-            head = data;
+            head = node;
         if (pos > 0 && pos < length)
         {
-            data->setNext(ref->getNext());
-            ref->setNext(data);
+            node->setNext(ref->getNext());
+            ref->setNext(node);
         }
         if (pos == length)
         {
             if (pos != 0)
-                ref->setNext(data);
+                ref->setNext(node);
         }
 
         length += 1;
@@ -78,11 +81,6 @@ public:
         {
             return false;
         }
-        // Node to move
-        // New Node
-        // old-1 -> old+1
-        // old -> new
-        // new-1 -> old
         SinglyLinkedNode* nodeOldNeighbor = head;
         for (int i = 0; i < (oldPos - 1); i++)
         {
@@ -198,22 +196,14 @@ void BinarySortSLL(SinglyLinkedList list)
 int main()
 {
     SinglyLinkedList list;
-    //std::vector<SinglyLinkedNode*> arr(10);
-    //for (int i = 0; i < 10; i++)
-    //{
-    //    arr.push_back(new SinglyLinkedNode(5));
-    //    list.add(arr[i], i);
-    //}
-    SinglyLinkedNode* n0 = new SinglyLinkedNode(2);
-    SinglyLinkedNode* n1 = new SinglyLinkedNode(5);
-    SinglyLinkedNode* n2 = new SinglyLinkedNode(7);
-    SinglyLinkedNode* n3 = new SinglyLinkedNode(3);
-    list.add(n0, 0);
-    list.add(n1, 1);
-    list.add(n2, 2);
-    list.add(n3, 3);
+    for (int i = 0; i < 10; i++)
+    {
+        list.add(i, i);
+    }
     list.display_forward();
     list.move(3, 1);
+    list.display_forward();
+    list.move(7, 2);
     list.display_forward();
     //std::forward_list<int> list1;
     //list1.assign({ 1,2,3,4,5 });
