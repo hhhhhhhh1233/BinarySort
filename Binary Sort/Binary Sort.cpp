@@ -81,26 +81,35 @@ public:
         {
             return false;
         }
-        SinglyLinkedNode* nodeOldNeighbor = head;
+        if (oldPos == 0 || newPos == 0)
+        {
+            std::cout << "BROKEN!\n";
+        }
+        SinglyLinkedNode* oldNodeNeighbor = head;
         for (int i = 0; i < (oldPos - 1); i++)
         {
-            nodeOldNeighbor = nodeOldNeighbor->getNext();
+            oldNodeNeighbor = oldNodeNeighbor->getNext();
         }
-        SinglyLinkedNode* nodeToMove = nodeOldNeighbor->getNext();
-        nodeOldNeighbor->setNext(nodeOldNeighbor->getNext()->getNext());
-        SinglyLinkedNode* nodeNewNeighbor = head;
+        SinglyLinkedNode* nodeToMove = oldNodeNeighbor->getNext();
+        oldNodeNeighbor->setNext(oldNodeNeighbor->getNext()->getNext());
+        SinglyLinkedNode* newNodeNeighbor = head;
         for (int i = 0; i < (newPos - 1); i++)
         {
-            nodeNewNeighbor = nodeNewNeighbor->getNext();
+            newNodeNeighbor = newNodeNeighbor->getNext();
         }
-        nodeToMove->setNext(nodeNewNeighbor->getNext());
-        nodeNewNeighbor->setNext(nodeToMove);
+        nodeToMove->setNext(newNodeNeighbor->getNext());
+        newNodeNeighbor->setNext(nodeToMove);
         return true;
     }
     //int search(SinglyLinkedNode* data);
     SinglyLinkedNode* nodeAt(int pos)
     {
-
+        if (pos > length - 1)
+            return nullptr;
+        SinglyLinkedNode* ref = head;
+        for (int i = 0; i < pos; i++)
+            ref = ref->getNext();
+        return ref;
     }
     int size()
     {
@@ -120,9 +129,11 @@ public:
 
 void BinarySortSLL(SinglyLinkedList list)
 {
-    for (int i = 0; i < list.size(); i++)
+    SinglyLinkedNode* it = list.nodeAt(0);
+    for (int i = 0; i < list.size() - 1; i++)
     {
-
+        std::cout << it->getData();
+        it = it->getNext();
     }
     //int i = 0;
     //for (int& elem : arr)
@@ -201,11 +212,10 @@ int main()
         list.add(i, i);
     }
     list.display_forward();
-    list.move(3, 1);
+    list.move(2, 4);
     list.display_forward();
-    list.move(7, 2);
-    list.display_forward();
+    //BinarySortSLL(list);
+
     //std::forward_list<int> list1;
     //list1.assign({ 1,2,3,4,5 });
-    //BinarySortSLL(list1);
 }
