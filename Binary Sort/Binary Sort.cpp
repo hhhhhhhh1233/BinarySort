@@ -3,6 +3,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <chrono>
 
 class SinglyLinkedNode {
 private:
@@ -127,9 +128,9 @@ public:
     }
 };
 
-void BinarySortSLL(SinglyLinkedList list)
+SinglyLinkedList BinarySortSLL(SinglyLinkedList list)
 {
-    std::cout << "--- Starting sort! ---\n";
+    //std::cout << "--- Starting sort! ---\n";
     SinglyLinkedNode* it = list.nodeAt(0);
     for (int i = 0; i < list.size(); i++)
     {
@@ -187,8 +188,8 @@ void BinarySortSLL(SinglyLinkedList list)
         //std::cout << std::endl;
         it = nextIter;
     }
-    std::cout << "--- Sorted! ---\n";
-    list.display_forward();
+    //std::cout << "--- Sorted! ---\n";
+    return list;
 }
 
 int main()
@@ -200,7 +201,10 @@ int main()
         list.add(rand() % 10000, i);
     }
     list.display_forward();
-    list.move(0, 3);
+    auto begin = std::chrono::steady_clock::now();
+    list = BinarySortSLL(list);
+    auto end = std::chrono::steady_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0;
     list.display_forward();
-    BinarySortSLL(list);
+    std::cout << "Time: " << duration << " seconds" << std::endl;
 }
