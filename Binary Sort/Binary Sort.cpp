@@ -5,13 +5,13 @@
 #include <time.h>
 #include <chrono>
 
-class SinglyLinkedNode {
+class Node {
 private:
     int data;
-    SinglyLinkedNode* next;
-    SinglyLinkedNode* prev;
+    Node* next;
+    Node* prev;
 public:
-    SinglyLinkedNode(int num)
+    Node(int num)
     {
         data = num;
         next = nullptr;
@@ -19,15 +19,15 @@ public:
     }
     int getData() { return data; }
     void setData(int d) { data = d; }
-    SinglyLinkedNode* getNext() { return next; }
-    SinglyLinkedNode* getPrev() { return prev; }
-    void setNext(SinglyLinkedNode* n) { next = n; }
-    void setPrev(SinglyLinkedNode* p) { prev = p; }
+    Node* getNext() { return next; }
+    Node* getPrev() { return prev; }
+    void setNext(Node* n) { next = n; }
+    void setPrev(Node* p) { prev = p; }
 };
 
 class SinglyLinkedList {
 private:
-    SinglyLinkedNode* head;
+    Node* head;
     int length;
 public:
     SinglyLinkedList()
@@ -42,9 +42,9 @@ public:
             return false;
         }
 
-        SinglyLinkedNode* node = new SinglyLinkedNode(data);
+        Node* node = new Node(data);
 
-        SinglyLinkedNode* ref = head;
+        Node* ref = head;
         for (int i = 0; i < pos - 1; i++)
         {
             ref = ref->getNext();
@@ -71,12 +71,12 @@ public:
         {
             return false;
         }
-        SinglyLinkedNode* oldNodeNeighbor = head;
+        Node* oldNodeNeighbor = head;
         for (int i = 0; i < (oldPos - 1); i++)
         {
             oldNodeNeighbor = oldNodeNeighbor->getNext();
         }
-        SinglyLinkedNode* nodeToMove = oldNodeNeighbor->getNext();
+        Node* nodeToMove = oldNodeNeighbor->getNext();
         if (oldPos != 0)
         {
             oldNodeNeighbor->setNext(nodeToMove->getNext());
@@ -86,7 +86,7 @@ public:
             nodeToMove = head;
             head = head->getNext();
         }
-        SinglyLinkedNode* newNodeNeighbor = head;
+        Node* newNodeNeighbor = head;
         for (int i = 0; i < (newPos - 1); i++)
         {
             newNodeNeighbor = newNodeNeighbor->getNext();
@@ -94,7 +94,7 @@ public:
         nodeToMove->setNext(newNodeNeighbor->getNext());
         if (newPos == 0)
         {
-            SinglyLinkedNode* temp = head;
+            Node* temp = head;
             head = nodeToMove;
             head->setNext(temp);
         }
@@ -104,16 +104,16 @@ public:
         }
         return true;
     }
-    SinglyLinkedNode* nodeAt(int pos)
+    Node* nodeAt(int pos)
     {
         if (pos > length - 1)
             return nullptr;
-        SinglyLinkedNode* ref = head;
+        Node* ref = head;
         for (int i = 0; i < pos; i++)
             ref = ref->getNext();
         return ref;
     }
-    SinglyLinkedNode* nodeAtFrom(int pos, SinglyLinkedNode* startingNode, int startingNodeIndex)
+    Node* nodeAtFrom(int pos, Node* startingNode, int startingNodeIndex)
     {
         if (pos > length - 1)
             return nullptr;
@@ -121,7 +121,7 @@ public:
         {
             return nodeAt(pos);
         }
-        SinglyLinkedNode* ref = startingNode;
+        Node* ref = startingNode;
         for (int i = startingNodeIndex; i < pos; i++)
         {
             ref = ref->getNext();
@@ -135,7 +135,7 @@ public:
     void display_forward()
     {
         std::cout << "List: ";
-        SinglyLinkedNode* ref = head;
+        Node* ref = head;
         while (ref != nullptr)
         {
             std::cout << ref->getData() << ", ";
@@ -145,10 +145,187 @@ public:
     }
 };
 
-SinglyLinkedList BinarySortSLL(SinglyLinkedList list)
+class DoublyLinkedList {
+private:
+    Node* head;
+    Node* tail;
+    int length;
+public:
+    DoublyLinkedList()
+    {
+        head = nullptr;
+        tail = nullptr;
+        length = 0;
+    }
+    bool add(int data, int pos)
+    {
+        if (pos > length)
+            return false;
+
+        Node* node = new Node(data);
+        Node* ref = head;
+        for (int i = 0; i < pos - 1; i++)
+            ref = ref->getNext();
+
+        if (pos == 0)
+            head = node;
+        if (pos > 0 && pos < length)
+        {
+            node->setPrev(ref);
+            node->setNext(ref->getNext());
+            ref->getNext()->setPrev(node);
+            ref->setNext(node);
+        }
+        if (pos == length)
+        {
+            tail = node;
+            node->setPrev(ref);
+            if (pos != 0)
+                ref->setNext(node);
+        }
+
+        length += 1;
+        return true;
+    }
+    bool move(int oldPos, int newPos)
+    {
+        if (oldPos > length - 1 || newPos > length - 1)
+        {
+            return false;
+        }
+
+        Node* oldNodeNeighborLeft = head;
+        Node* nodeToMove;
+        Node* oldNodeNeighborRight;
+        Node* newNodeNeighborLeft = head;
+        Node* newNodeNeighborRight;
+        
+        for (int i = 0; i < oldPos - 1; i++)
+        {
+            oldNodeNeighborLeft = oldNodeNeighborLeft->getNext();
+        }
+        nodeToMove = oldNodeNeighborLeft->getNext();
+        oldNodeNeighborRight = nodeToMove->getNext();
+
+        for (int i = 0; i < newPos - 1; i++)
+        {
+            newNodeNeighborLeft = newNodeNeighborLeft->getNext();
+        }
+        newNodeNeighborRight = newNodeNeighborLeft->getNext();
+
+        if (oldPos == 0)
+        {
+            head = head->getNext();
+            head->setPrev(nullptr);
+        }
+        else
+        {
+            oldNodeNeighborLeft->setNext(oldNodeNeighborRight);
+        }
+
+        if (oldPos == length - 1)
+        {
+            tail = tail->getPrev();
+            tail->setNext(nullptr);
+        }
+        else
+        {
+            oldNodeNeighborRight->setPrev(oldNodeNeighborLeft);
+        }
+
+        if (newPos == 0)
+        {
+            nodeToMove->setNext(head);
+            nodeToMove->setPrev(nullptr);
+            head = nodeToMove;
+        }
+        else
+        {
+            newNodeNeighborLeft->setNext(nodeToMove);
+            nodeToMove->setPrev(newNodeNeighborLeft);
+        }
+
+        if (newPos == length - 1)
+        {
+            tail = nodeToMove;
+            nodeToMove->setNext(nullptr);
+        }
+        else
+        {
+            nodeToMove->setNext(newNodeNeighborRight);
+            newNodeNeighborRight->setPrev(nodeToMove);
+        }
+        return true;
+    }
+    
+    Node* nodeAt(int pos)
+    {
+        if (pos > length - 1)
+            return nullptr;
+        Node* ref = head;
+        for (int i = 0; i < pos; i++)
+            ref = ref->getNext();
+        return ref;
+    }
+    
+    Node* nodeAtFrom(int pos, Node* startingNode, int startingNodeIndex)
+    {
+        if (pos > length - 1)
+        {
+            return nullptr;
+        }
+        int difference = startingNodeIndex - pos;
+        Node* ref = startingNode;
+        if (difference > 0)
+        {
+            for (int i = startingNodeIndex; i < pos; i++)
+            {
+                ref = ref->getNext();
+            }
+            return ref;
+        }
+        else if (difference < 0)
+        {
+            for (int i = startingNodeIndex; i > pos; i--)
+            {
+                ref = ref->getPrev();
+            }
+            return ref;
+        }
+    }
+
+    void display_forward()
+    {
+        Node* ref = head;
+        while (ref != nullptr)
+        {
+            std::cout << ref->getData() << ", ";
+            ref = ref->getNext();
+        }
+        std::cout << std::endl;
+    }
+
+    void display_backward()
+    {
+        Node* ref = tail;
+        while (ref != nullptr)
+        {
+            std::cout << ref->getData() << ", ";
+            ref = ref->getPrev();
+        }
+        std::cout << std::endl;
+    }
+
+    int size()
+    {
+        return length;
+    }
+};
+
+void BinarySortSLL(SinglyLinkedList& list)
 {
     //std::cout << "--- Starting sort! ---\n";
-    SinglyLinkedNode* it = list.nodeAt(0);
+    Node* it = list.nodeAt(0);
     for (int i = 0; i < list.size(); i++)
     {
         //std::cout << "Handling " << it->getData() << " at index " << i;
@@ -157,9 +334,9 @@ SinglyLinkedList BinarySortSLL(SinglyLinkedList list)
         int upperBound = i - 1;
         int currentHalf = lowerBound + floor((upperBound - lowerBound)/2);
 
-        SinglyLinkedNode* lbPtr = list.nodeAt(lowerBound);
-        SinglyLinkedNode* ubPtr = list.nodeAtFrom(upperBound, lbPtr, lowerBound);
-        SinglyLinkedNode* chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
+        Node* lbPtr = list.nodeAt(lowerBound);
+        Node* ubPtr = list.nodeAtFrom(upperBound, lbPtr, lowerBound);
+        Node* chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
 
         //SEARCH FOR LOCATION
         while (upperBound > lowerBound)
@@ -186,7 +363,7 @@ SinglyLinkedList BinarySortSLL(SinglyLinkedList list)
             chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
         }
         
-        SinglyLinkedNode* nextIter = it->getNext();
+        Node* nextIter = it->getNext();
 
         //MOVE NODE TO LOCATION
         //std::cout << std::endl;
@@ -206,22 +383,33 @@ SinglyLinkedList BinarySortSLL(SinglyLinkedList list)
         it = nextIter;
     }
     //std::cout << "--- Sorted! ---\n";
-    return list;
 }
 
 int main()
 {
-    srand(time(NULL));
-    SinglyLinkedList list;
-    for (int i = 0; i < 10000; i++)
+    // srand(time(NULL));
+    // SinglyLinkedList list;
+    // for (int i = 0; i < 10; i++)
+    // {
+    //     list.add(rand() % 10, i);
+    // }
+    // list.display_forward();
+    // auto begin = std::chrono::steady_clock::now();
+    // BinarySortSLL(list);
+    // auto end = std::chrono::steady_clock::now();
+    // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0;
+    // list.display_forward();
+    // std::cout << "Time: " << duration << " seconds" << std::endl;
+    DoublyLinkedList list;
+    for (int i = 0; i < 10; i++)
     {
-        list.add(rand() % 10000, i);
+        list.add(i, i);
     }
     list.display_forward();
-    auto begin = std::chrono::steady_clock::now();
-    list = BinarySortSLL(list);
-    auto end = std::chrono::steady_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0;
+    list.display_backward();
+
+    list.move(0,6);
+
     list.display_forward();
-    std::cout << "Time: " << duration << " seconds" << std::endl;
+    list.display_backward();
 }
