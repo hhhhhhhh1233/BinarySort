@@ -216,7 +216,7 @@ public:
             newNodeNeighborLeft = newNodeNeighborLeft->getNext();
         }
         newNodeNeighborRight = newNodeNeighborLeft->getNext();
-        
+
         if (oldPos == 0)
         {
             nodeToMove = head;
@@ -276,7 +276,7 @@ public:
         {
             return nullptr;
         }
-        int difference = startingNodeIndex - pos;
+        int difference = pos - startingNodeIndex;
         Node* ref = startingNode;
         if (difference > 0)
         {
@@ -294,6 +294,7 @@ public:
             }
             return ref;
         }
+        return startingNode;
     }
 
     void display_forward()
@@ -325,6 +326,69 @@ public:
 };
 
 void BinarySortSLL(SinglyLinkedList& list)
+{
+    //std::cout << "--- Starting sort! ---\n";
+    Node* it = list.nodeAt(0);
+    for (int i = 0; i < list.size(); i++)
+    {
+        //std::cout << "Handling " << it->getData() << " at index " << i;
+        
+        int lowerBound = 0;
+        int upperBound = i - 1;
+        int currentHalf = lowerBound + floor((upperBound - lowerBound)/2);
+
+        Node* lbPtr = list.nodeAt(lowerBound);
+        Node* ubPtr = list.nodeAtFrom(upperBound, lbPtr, lowerBound);
+        Node* chPtr = list.nodeAtFrom(currentHalf, it, upperBound);
+
+        //SEARCH FOR LOCATION
+        while (upperBound > lowerBound)
+        {
+            //std::cout << "\nupperBound: " << upperBound << "\nlowerBound: " << lowerBound << "\ncurrentHalf: " << currentHalf << std::endl;
+            if (it->getData() == chPtr->getData())
+            {
+                lbPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
+                lowerBound = currentHalf;
+                ubPtr = list.nodeAtFrom(currentHalf, ubPtr, upperBound);
+                upperBound = currentHalf;
+            }
+            else if (it->getData() > chPtr->getData())
+            {
+                lbPtr = list.nodeAtFrom(currentHalf + 1, chPtr, currentHalf);
+                lowerBound = currentHalf + 1;
+            }
+            else
+            {
+                ubPtr = list.nodeAtFrom(currentHalf + 1, chPtr, currentHalf);
+                upperBound = currentHalf - 1;
+            }
+            currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
+            chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
+        }
+        
+        Node* nextIter = it->getNext();
+
+        //MOVE NODE TO LOCATION
+        //std::cout << std::endl;
+        //list.display_forward();
+        if (it->getData() <= lbPtr->getData())
+        {
+            //std::cout << it->getData() << " is less than or equal to " << lbPtr->getData() << std::endl;
+            list.move(i, lowerBound);
+        }
+        else
+        {
+            //std::cout << it->getData() << " is greater than " << lbPtr->getData() << std::endl;
+            list.move(i, lowerBound + 1);
+        }
+        //list.display_forward();
+        //std::cout << std::endl;
+        it = nextIter;
+    }
+    //std::cout << "--- Sorted! ---\n";
+}
+
+void BinarySortDLL(DoublyLinkedList& list)
 {
     //std::cout << "--- Starting sort! ---\n";
     Node* it = list.nodeAt(0);
@@ -414,4 +478,13 @@ int main()
 
     list.display_forward();
     list.display_backward();
+
+    Node* ref = list.nodeAt(5);
+
+    std::cout << "The data is " << list.nodeAtFrom(2, ref, 5)->getData() << std::endl;
+
+    // BinarySortDLL(list);
+
+    // list.display_forward();
+    // list.display_backward();
 }
