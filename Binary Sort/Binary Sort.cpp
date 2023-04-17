@@ -127,9 +127,12 @@ public:
 
 void BinarySortSLL(SinglyLinkedList list)
 {
+    std::cout << "--- Starting sort! ---\n";
     SinglyLinkedNode* it = list.nodeAt(0);
     for (int i = 0; i < list.size(); i++)
     {
+        std::cout << "Handling " << it->getData() << " at index " << i;
+        
         int lowerBound = 0;
         int upperBound = i - 1;
         int currentHalf = lowerBound + floor((upperBound - lowerBound)/2);
@@ -141,6 +144,7 @@ void BinarySortSLL(SinglyLinkedList list)
         //SEARCH FOR LOCATION
         while (upperBound > lowerBound)
         {
+            std::cout << "\nupperBound: " << upperBound << "\nlowerBound: " << lowerBound << "\ncurrentHalf: " << currentHalf << std::endl;
             if (it->getData() == chPtr->getData())
             {
                 upperBound = currentHalf;
@@ -165,18 +169,23 @@ void BinarySortSLL(SinglyLinkedList list)
         SinglyLinkedNode* nextIter = it->getNext();
 
         //MOVE NODE TO LOCATION
-        if (it->getData() >= lbPtr->getData())
+        std::cout << std::endl;
+        list.display_forward();
+        if (it->getData() <= lbPtr->getData())
         {
+            std::cout << it->getData() << " is less than or equal to " << lbPtr->getData() << std::endl;
             list.move(i, lowerBound);
         }
         else
         {
-            list.move(i, lowerBound - 1);
+            std::cout << it->getData() << " is greater than " << lbPtr->getData() << std::endl;
+            list.move(i, lowerBound + 1);
         }
-
-        std::cout << it->getData() << " ";
+        list.display_forward();
+        std::cout << std::endl;
         it = nextIter;
     }
+    list.display_forward();
     //int i = 0;
     //for (int& elem : arr)
     //{
@@ -257,5 +266,4 @@ int main()
     list.move(0, 3);
     list.display_forward();
     BinarySortSLL(list);
-    list.display_forward();
 }
