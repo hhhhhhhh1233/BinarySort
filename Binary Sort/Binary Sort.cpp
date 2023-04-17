@@ -211,50 +211,100 @@ public:
         {
             newNodeNeighborLeft = newNodeNeighborLeft->getNext();
         }
+        if (newPos > oldPos)
+        {
+            newNodeNeighborLeft = newNodeNeighborLeft->getNext();
+        }
         newNodeNeighborRight = newNodeNeighborLeft->getNext();
 
+        // IF MOVING FROM THE FIRST POSITION
+        // if (oldPos == 0)
+        // {
+        //     head = head->getNext();
+        //     head->setPrev(nullptr);
+        // }
+        // else // IF YOU'RE NOT MOVING FROM THE FIRST POSITION
+        // {
+        //     oldNodeNeighborLeft->setNext(oldNodeNeighborRight);
+        // }
+
+        // IF YOU'RE MOVING FROM THE LAST POSITION
+        // if (oldPos == length - 1)
+        // {
+        //     tail = tail->getPrev();
+        //     tail->setNext(nullptr);
+        // }
+        // else // IF YOU'RE NOT MVING FROM THE LAST POSITION
+        // {
+        //     oldNodeNeighborRight->setPrev(oldNodeNeighborLeft);
+        // }
+
+        // IF YOU'RE MOVING TO THE FIRST POSITION
+        // if (newPos == 0)
+        // {
+        //     nodeToMove->setNext(head);
+        //     nodeToMove->setPrev(nullptr);
+        //     head = nodeToMove;
+        //     head->setPrev(nodeToMove);
+        // }
+        // else // IF YOU'RE NOT MOVING TO THE FIRST POSITION
+        // {
+        //     newNodeNeighborLeft->setNext(nodeToMove);
+        //     nodeToMove->setPrev(newNodeNeighborLeft);
+        // }
+
+        // IF YOU'RE MOVING TO THE LAST POSITION
+        // if (newPos == length - 1)
+        // {
+        //     tail = nodeToMove;
+        //     nodeToMove->setNext(nullptr);
+        // }
+        // else // IF YOU'RE NOT MOVING TO THE LAST POSITION
+        // {
+        //     nodeToMove->setNext(newNodeNeighborRight);
+        //     newNodeNeighborRight->setPrev(nodeToMove);
+        // }
+        
         if (oldPos == 0)
         {
+            nodeToMove = head;
             head = head->getNext();
             head->setPrev(nullptr);
         }
-        else
+        else if (oldPos == length - 1)
         {
-            oldNodeNeighborLeft->setNext(oldNodeNeighborRight);
-        }
-
-        if (oldPos == length - 1)
-        {
+            nodeToMove = tail;
             tail = tail->getPrev();
             tail->setNext(nullptr);
         }
         else
         {
+            oldNodeNeighborLeft->setNext(oldNodeNeighborRight);
             oldNodeNeighborRight->setPrev(oldNodeNeighborLeft);
         }
 
         if (newPos == 0)
         {
-            nodeToMove->setNext(head);
             nodeToMove->setPrev(nullptr);
+            nodeToMove->setNext(head);
+            head->setPrev(nodeToMove);
             head = nodeToMove;
+        }
+        else if (newPos == length - 1)
+        {
+            nodeToMove->setNext(nullptr);
+            nodeToMove->setPrev(tail);
+            tail->setNext(nodeToMove);
+            tail = nodeToMove;
         }
         else
         {
             newNodeNeighborLeft->setNext(nodeToMove);
+            newNodeNeighborRight->setPrev(nodeToMove);
             nodeToMove->setPrev(newNodeNeighborLeft);
+            nodeToMove->setNext(newNodeNeighborRight);
         }
 
-        if (newPos == length - 1)
-        {
-            tail = nodeToMove;
-            nodeToMove->setNext(nullptr);
-        }
-        else
-        {
-            nodeToMove->setNext(newNodeNeighborRight);
-            newNodeNeighborRight->setPrev(nodeToMove);
-        }
         return true;
     }
     
@@ -408,7 +458,7 @@ int main()
     list.display_forward();
     list.display_backward();
 
-    list.move(0,6);
+    list.move(2,0);
 
     list.display_forward();
     list.display_backward();
