@@ -1,6 +1,8 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include <stdlib.h>
+#include <time.h>
 
 class SinglyLinkedNode {
 private:
@@ -131,7 +133,7 @@ void BinarySortSLL(SinglyLinkedList list)
     SinglyLinkedNode* it = list.nodeAt(0);
     for (int i = 0; i < list.size(); i++)
     {
-        std::cout << "Handling " << it->getData() << " at index " << i;
+        //std::cout << "Handling " << it->getData() << " at index " << i;
         
         int lowerBound = 0;
         int upperBound = i - 1;
@@ -144,7 +146,7 @@ void BinarySortSLL(SinglyLinkedList list)
         //SEARCH FOR LOCATION
         while (upperBound > lowerBound)
         {
-            std::cout << "\nupperBound: " << upperBound << "\nlowerBound: " << lowerBound << "\ncurrentHalf: " << currentHalf << std::endl;
+            //std::cout << "\nupperBound: " << upperBound << "\nlowerBound: " << lowerBound << "\ncurrentHalf: " << currentHalf << std::endl;
             if (it->getData() == chPtr->getData())
             {
                 upperBound = currentHalf;
@@ -169,98 +171,33 @@ void BinarySortSLL(SinglyLinkedList list)
         SinglyLinkedNode* nextIter = it->getNext();
 
         //MOVE NODE TO LOCATION
-        std::cout << std::endl;
-        list.display_forward();
+        //std::cout << std::endl;
+        //list.display_forward();
         if (it->getData() <= lbPtr->getData())
         {
-            std::cout << it->getData() << " is less than or equal to " << lbPtr->getData() << std::endl;
+            //std::cout << it->getData() << " is less than or equal to " << lbPtr->getData() << std::endl;
             list.move(i, lowerBound);
         }
         else
         {
-            std::cout << it->getData() << " is greater than " << lbPtr->getData() << std::endl;
+            //std::cout << it->getData() << " is greater than " << lbPtr->getData() << std::endl;
             list.move(i, lowerBound + 1);
         }
-        list.display_forward();
-        std::cout << std::endl;
+        //list.display_forward();
+        //std::cout << std::endl;
         it = nextIter;
     }
+    std::cout << "--- Sorted! ---\n";
     list.display_forward();
-    //int i = 0;
-    //for (int& elem : arr)
-    //{
-    //    int lowerBound = 0;
-    //    int upperBound = i - 1;
-    //    int currentHalf;
-
-    //    std::forward_list<int>::iterator lowerBoundPtr = arr.begin();
-    //    std::forward_list<int>::iterator upperBoundPtr = arr.begin();
-    //    std::forward_list<int>::iterator currentHalfPtr = arr.begin();
-
-    //    for (int j = 0; j < upperBound; j++)
-    //    {
-    //        upperBoundPtr = std::next(upperBoundPtr);
-    //    }
-
-    //    std::forward_list<int>::iterator prevToCurrentElemPtr = upperBoundPtr;
-
-    //    while (upperBound > lowerBound)
-    //    {
-    //        currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
-    //        currentHalfPtr = lowerBoundPtr;
-
-    //        for (int j = 0; j < (currentHalf - lowerBound); j++)
-    //        {
-    //            currentHalfPtr = std::next(currentHalfPtr);
-    //        }
-
-    //        if (elem == *currentHalfPtr)
-    //        {
-    //            lowerBound = currentHalf;
-    //            upperBound = currentHalf;
-    //        }
-    //        else if (elem < *currentHalfPtr)
-    //        {
-    //            upperBoundPtr = lowerBoundPtr;
-    //            for (int j = 0; j < (upperBound - lowerBound); j++)
-    //            {
-    //                upperBoundPtr = std::next(upperBoundPtr);
-    //            }
-    //            upperBound = currentHalf - 1;
-    //        }
-    //        else
-    //        {
-    //            for (int j = 0; j < ((currentHalf + 1) - lowerBound); j++)
-    //            {
-    //                lowerBoundPtr = std::next(lowerBoundPtr);
-    //            }
-    //            lowerBound = currentHalf + 1;
-    //        }
-    //    }
-    //    if (elem > *currentHalfPtr)
-    //    {
-    //        arr.emplace_after(std::next(currentHalfPtr), elem);
-    //        arr.erase_after(prevToCurrentElemPtr);
-    //    }
-    //    else
-    //    {
-    //        arr.emplace_after(currentHalfPtr, elem);
-    //        arr.erase_after(prevToCurrentElemPtr);
-    //    }
-    //    i++;
-    //}
-    //for (int& i : arr)
-    //{
-    //    std::cout << i << " ";
-    //}
 }
 
 int main()
 {
+    srand(time(NULL));
     SinglyLinkedList list;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 10000; i++)
     {
-        list.add(i, i);
+        list.add(rand() % 10000, i);
     }
     list.display_forward();
     list.move(0, 3);
