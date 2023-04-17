@@ -114,6 +114,7 @@ public:
     }
     void display_forward()
     {
+        std::cout << "List: ";
         SinglyLinkedNode* ref = head;
         while (ref != nullptr)
         {
@@ -131,22 +132,50 @@ void BinarySortSLL(SinglyLinkedList list)
     {
         int lowerBound = 0;
         int upperBound = i - 1;
-        int currentHalf;
+        int currentHalf = lowerBound + floor((upperBound - lowerBound)/2);
 
-        SinglyLinkedNode* lbPtr = list.nodeAt(0);
-        SinglyLinkedNode* ubPtr = lbPtr;
-        SinglyLinkedNode* chPtr = lbPtr;
+        SinglyLinkedNode* lbPtr = list.nodeAt(lowerBound);
+        SinglyLinkedNode* ubPtr = list.nodeAt(upperBound);
+        SinglyLinkedNode* chPtr = list.nodeAt(currentHalf);
 
         //SEARCH FOR LOCATION
         while (upperBound > lowerBound)
         {
-
+            if (it->getData() == chPtr->getData())
+            {
+                upperBound = currentHalf;
+                ubPtr = list.nodeAt(upperBound);
+                lowerBound = currentHalf;
+                lbPtr = list.nodeAt(lowerBound);
+            }
+            else if (it->getData() > chPtr->getData())
+            {
+                lowerBound = currentHalf + 1;
+                lbPtr = list.nodeAt(lowerBound);
+            }
+            else
+            {
+                upperBound = currentHalf - 1;
+                ubPtr = list.nodeAt(upperBound);
+            }
+            currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
+            chPtr = list.nodeAt(currentHalf);
         }
+        
+        SinglyLinkedNode* nextIter = it->getNext();
 
         //MOVE NODE TO LOCATION
+        if (it->getData() >= lbPtr->getData())
+        {
+            list.move(i, lowerBound);
+        }
+        else
+        {
+            list.move(i, lowerBound - 1);
+        }
 
         std::cout << it->getData() << " ";
-        it = it->getNext();
+        it = nextIter;
     }
     //int i = 0;
     //for (int& elem : arr)
@@ -220,12 +249,13 @@ void BinarySortSLL(SinglyLinkedList list)
 int main()
 {
     SinglyLinkedList list;
-    for (int i = 0; i < 1000; i++)
+    for (int i = 0; i < 10; i++)
     {
         list.add(i, i);
     }
     list.display_forward();
-    list.move(0, 5);
+    list.move(0, 3);
     list.display_forward();
     BinarySortSLL(list);
+    list.display_forward();
 }
