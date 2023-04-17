@@ -30,19 +30,17 @@ public:
         length = 0;
         head = nullptr;
     }
-    ~SinglyLinkedList()
-    {
-        while (length > 0)
-        {
-            SinglyLinkedNode* ref = head;
-            for (int i = 0; i < length - 1; i++)
-            {
-                ref = ref->getNext();
-            }
-            delete ref;
-            length--;
-        }
-    }
+    //~SinglyLinkedList()
+    //{
+    //    SinglyLinkedNode* current = head;
+    //    while (current != nullptr)
+    //    {
+    //        SinglyLinkedNode* next = current->getNext();
+    //        delete current;
+    //        current = next;
+    //    }
+    //    head = nullptr;
+    //}
     bool add(int data, int pos)
     {
         if (pos > length || pos < 0)
@@ -81,24 +79,37 @@ public:
         {
             return false;
         }
-        if (oldPos == 0 || newPos == 0)
-        {
-            std::cout << "BROKEN!\n";
-        }
         SinglyLinkedNode* oldNodeNeighbor = head;
         for (int i = 0; i < (oldPos - 1); i++)
         {
             oldNodeNeighbor = oldNodeNeighbor->getNext();
         }
         SinglyLinkedNode* nodeToMove = oldNodeNeighbor->getNext();
-        oldNodeNeighbor->setNext(oldNodeNeighbor->getNext()->getNext());
+        if (oldPos != 0)
+        {
+            oldNodeNeighbor->setNext(nodeToMove->getNext());
+        }
+        else
+        {
+            nodeToMove = head;
+            head = head->getNext();
+        }
         SinglyLinkedNode* newNodeNeighbor = head;
         for (int i = 0; i < (newPos - 1); i++)
         {
             newNodeNeighbor = newNodeNeighbor->getNext();
         }
         nodeToMove->setNext(newNodeNeighbor->getNext());
-        newNodeNeighbor->setNext(nodeToMove);
+        if (newPos == 0)
+        {
+            SinglyLinkedNode* temp = head;
+            head = nodeToMove;
+            head->setNext(temp);
+        }
+        else
+        {
+            newNodeNeighbor->setNext(nodeToMove);
+        }
         return true;
     }
     //int search(SinglyLinkedNode* data);
@@ -130,9 +141,9 @@ public:
 void BinarySortSLL(SinglyLinkedList list)
 {
     SinglyLinkedNode* it = list.nodeAt(0);
-    for (int i = 0; i < list.size() - 1; i++)
+    for (int i = 0; i <= list.size() - 1; i++)
     {
-        std::cout << it->getData();
+        std::cout << it->getData() << " ";
         it = it->getNext();
     }
     //int i = 0;
@@ -207,14 +218,14 @@ void BinarySortSLL(SinglyLinkedList list)
 int main()
 {
     SinglyLinkedList list;
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 1000; i++)
     {
         list.add(i, i);
     }
     list.display_forward();
-    list.move(2, 4);
+    list.move(0, 5);
     list.display_forward();
-    //BinarySortSLL(list);
+    BinarySortSLL(list);
 
     //std::forward_list<int> list1;
     //list1.assign({ 1,2,3,4,5 });
