@@ -30,17 +30,6 @@ public:
         length = 0;
         head = nullptr;
     }
-    //~SinglyLinkedList()
-    //{
-    //    SinglyLinkedNode* current = head;
-    //    while (current != nullptr)
-    //    {
-    //        SinglyLinkedNode* next = current->getNext();
-    //        delete current;
-    //        current = next;
-    //    }
-    //    head = nullptr;
-    //}
     bool add(int data, int pos)
     {
         if (pos > length || pos < 0)
@@ -71,8 +60,6 @@ public:
         length += 1;
         return true;
     }
-    //bool remove(int pos);
-    //bool replace(SinglyLinkedNode* old, SinglyLinkedNode* neww);
     bool move(int oldPos, int newPos)
     {
         if (oldPos > length - 1 || newPos > length - 1)
@@ -112,7 +99,6 @@ public:
         }
         return true;
     }
-    //int search(SinglyLinkedNode* data);
     SinglyLinkedNode* nodeAt(int pos)
     {
         if (pos > length - 1)
@@ -141,8 +127,24 @@ public:
 void BinarySortSLL(SinglyLinkedList list)
 {
     SinglyLinkedNode* it = list.nodeAt(0);
-    for (int i = 0; i <= list.size() - 1; i++)
+    for (int i = 0; i < list.size(); i++)
     {
+        int lowerBound = 0;
+        int upperBound = i - 1;
+        int currentHalf;
+
+        SinglyLinkedNode* lbPtr = list.nodeAt(0);
+        SinglyLinkedNode* ubPtr = lbPtr;
+        SinglyLinkedNode* chPtr = lbPtr;
+
+        //SEARCH FOR LOCATION
+        while (upperBound > lowerBound)
+        {
+
+        }
+
+        //MOVE NODE TO LOCATION
+
         std::cout << it->getData() << " ";
         it = it->getNext();
     }
@@ -226,7 +228,4 @@ int main()
     list.move(0, 5);
     list.display_forward();
     BinarySortSLL(list);
-
-    //std::forward_list<int> list1;
-    //list1.assign({ 1,2,3,4,5 });
 }
