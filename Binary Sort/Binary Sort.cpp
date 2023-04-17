@@ -20,7 +20,9 @@ public:
     int getData() { return data; }
     void setData(int d) { data = d; }
     SinglyLinkedNode* getNext() { return next; }
+    SinglyLinkedNode* getPrev() { return prev; }
     void setNext(SinglyLinkedNode* n) { next = n; }
+    void setPrev(SinglyLinkedNode* p) { prev = p; }
 };
 
 class SinglyLinkedList {
@@ -111,6 +113,21 @@ public:
             ref = ref->getNext();
         return ref;
     }
+    SinglyLinkedNode* nodeAtFrom(int pos, SinglyLinkedNode* startingNode, int startingNodeIndex)
+    {
+        if (pos > length - 1)
+            return nullptr;
+        if (startingNodeIndex > pos)
+        {
+            return nodeAt(pos);
+        }
+        SinglyLinkedNode* ref = startingNode;
+        for (int i = startingNodeIndex; i < pos; i++)
+        {
+            ref = ref->getNext();
+        }
+	return ref;
+    }
     int size()
     {
         return length;
@@ -141,8 +158,8 @@ SinglyLinkedList BinarySortSLL(SinglyLinkedList list)
         int currentHalf = lowerBound + floor((upperBound - lowerBound)/2);
 
         SinglyLinkedNode* lbPtr = list.nodeAt(lowerBound);
-        SinglyLinkedNode* ubPtr = list.nodeAt(upperBound);
-        SinglyLinkedNode* chPtr = list.nodeAt(currentHalf);
+        SinglyLinkedNode* ubPtr = list.nodeAtFrom(upperBound, lbPtr, lowerBound);
+        SinglyLinkedNode* chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
 
         //SEARCH FOR LOCATION
         while (upperBound > lowerBound)
@@ -150,10 +167,10 @@ SinglyLinkedList BinarySortSLL(SinglyLinkedList list)
             //std::cout << "\nupperBound: " << upperBound << "\nlowerBound: " << lowerBound << "\ncurrentHalf: " << currentHalf << std::endl;
             if (it->getData() == chPtr->getData())
             {
-                upperBound = currentHalf;
-                ubPtr = list.nodeAt(upperBound);
                 lowerBound = currentHalf;
                 lbPtr = list.nodeAt(lowerBound);
+                upperBound = currentHalf;
+                ubPtr = list.nodeAtFrom(upperBound, lbPtr, lowerBound);
             }
             else if (it->getData() > chPtr->getData())
             {
@@ -163,10 +180,10 @@ SinglyLinkedList BinarySortSLL(SinglyLinkedList list)
             else
             {
                 upperBound = currentHalf - 1;
-                ubPtr = list.nodeAt(upperBound);
+                ubPtr = list.nodeAtFrom(upperBound, lbPtr, lowerBound);
             }
             currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
-            chPtr = list.nodeAt(currentHalf);
+            chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
         }
         
         SinglyLinkedNode* nextIter = it->getNext();
