@@ -71,12 +71,18 @@ public:
         {
             return false;
         }
-        Node* oldNodeNeighbor = head;
+
+        Node* oldNodeNeighbor;
+        Node* nodeToMove;
+        Node* newNodeNeighbor;
+        
+        oldNodeNeighbor = head;
         for (int i = 0; i < (oldPos - 1); i++)
         {
             oldNodeNeighbor = oldNodeNeighbor->getNext();
         }
-        Node* nodeToMove = oldNodeNeighbor->getNext();
+        nodeToMove = oldNodeNeighbor->getNext();
+
         if (oldPos != 0)
         {
             oldNodeNeighbor->setNext(nodeToMove->getNext());
@@ -86,12 +92,15 @@ public:
             nodeToMove = head;
             head = head->getNext();
         }
-        Node* newNodeNeighbor = head;
+
+        newNodeNeighbor = head;
         for (int i = 0; i < (newPos - 1); i++)
         {
             newNodeNeighbor = newNodeNeighbor->getNext();
         }
+
         nodeToMove->setNext(newNodeNeighbor->getNext());
+
         if (newPos == 0)
         {
             Node* temp = head;
@@ -126,7 +135,7 @@ public:
         {
             ref = ref->getNext();
         }
-	return ref;
+	    return ref;
     }
     int size()
     {
@@ -194,12 +203,14 @@ public:
             return false;
         }
 
+        // Declaring pointers
         Node* oldNodeNeighborLeft = head;
         Node* nodeToMove;
         Node* oldNodeNeighborRight;
         Node* newNodeNeighborLeft = head;
         Node* newNodeNeighborRight;
         
+        // Defining pointers
         for (int i = 0; i < oldPos - 1; i++)
         {
             oldNodeNeighborLeft = oldNodeNeighborLeft->getNext();
@@ -217,6 +228,7 @@ public:
         }
         newNodeNeighborRight = newNodeNeighborLeft->getNext();
 
+        // Fixing up the old position
         if (oldPos == 0)
         {
             nodeToMove = head;
@@ -235,6 +247,7 @@ public:
             oldNodeNeighborRight->setPrev(oldNodeNeighborLeft);
         }
 
+        // Fixing up the new position
         if (newPos == 0)
         {
             nodeToMove->setPrev(nullptr);
@@ -339,7 +352,7 @@ void BinarySortSLL(SinglyLinkedList& list)
 
         Node* lbPtr = list.nodeAt(lowerBound);
         Node* ubPtr = list.nodeAtFrom(upperBound, lbPtr, lowerBound);
-        Node* chPtr = list.nodeAtFrom(currentHalf, it, upperBound);
+        Node* chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
 
         //SEARCH FOR LOCATION
         while (upperBound > lowerBound)
@@ -349,7 +362,7 @@ void BinarySortSLL(SinglyLinkedList& list)
             {
                 lbPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
                 lowerBound = currentHalf;
-                ubPtr = list.nodeAtFrom(currentHalf, ubPtr, upperBound);
+                ubPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
                 upperBound = currentHalf;
             }
             else if (it->getData() > chPtr->getData())
@@ -453,38 +466,33 @@ void BinarySortDLL(DoublyLinkedList& list)
 
 int main()
 {
-    // srand(time(NULL));
-    // SinglyLinkedList list;
-    // for (int i = 0; i < 10; i++)
-    // {
-    //     list.add(rand() % 10, i);
-    // }
-    // list.display_forward();
-    // auto begin = std::chrono::steady_clock::now();
-    // BinarySortSLL(list);
-    // auto end = std::chrono::steady_clock::now();
-    // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0;
-    // list.display_forward();
-    // std::cout << "Time: " << duration << " seconds" << std::endl;
-    DoublyLinkedList list;
-    for (int i = 0; i < 10; i++)
-    {
-        list.add(i, i);
-    }
-    list.display_forward();
-    list.display_backward();
+     srand(time(NULL));
+     SinglyLinkedList list;
+     for (int i = 0; i < 10000; i++)
+     {
+         list.add(rand() % 10000, i);
+     }
+     list.display_forward();
+     auto begin = std::chrono::steady_clock::now();
+     BinarySortSLL(list);
+     auto end = std::chrono::steady_clock::now();
+     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0;
+     list.display_forward();
+     std::cout << "Time: " << duration << " seconds" << std::endl;
+    //DoublyLinkedList list;
+    //for (int i = 0; i < 10; i++)
+    //{
+    //    list.add(i, i);
+    //}
+    //list.display_forward();
+    //list.display_backward();
 
-    list.move(2,0);
+    //Node* ref = list.nodeAt(5);
+    //ref = list.nodeAtFrom(3, ref, 5);
+    //std::cout << "The data is " << ref->getData() << std::endl;
 
-    list.display_forward();
-    list.display_backward();
+    //BinarySortDLL(list);
 
-    Node* ref = list.nodeAt(5);
-
-    std::cout << "The data is " << list.nodeAtFrom(2, ref, 5)->getData() << std::endl;
-
-    // BinarySortDLL(list);
-
-    // list.display_forward();
-    // list.display_backward();
+    //list.display_forward();
+    //list.display_backward();
 }
