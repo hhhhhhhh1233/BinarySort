@@ -50,7 +50,14 @@ public:
             ref = ref->getNext();
         }
         if (pos == 0)
+        {
+            if (length > 0)
+            {
+                node->setNext(head);
+            }
             head = node;
+        }
+
         if (pos > 0 && pos < length)
         {
             node->setNext(ref->getNext());
@@ -193,7 +200,14 @@ public:
             ref = ref->getNext();
 
         if (pos == 0)
+        {
+            if (length > 0)
+            {
+                head->setPrev(node);
+                node->setNext(head);
+            }
             head = node;
+        }
         if (pos > 0 && pos < length)
         {
             node->setPrev(ref);
@@ -503,40 +517,46 @@ void BinarySortDLL(DoublyLinkedList& list)
 int main()
 {
     srand(time(NULL));
-    SinglyLinkedList list;
-    for (int i = 0; i < 100000; i++)
+    double totalTime = 0;
+    for (int j = 0; j < 100; j++)
     {
-        list.add(i, i);
+        SinglyLinkedList list;
+        for (int i = 0; i < 20000; i++)
+        {
+            list.add(rand() % 20000, 0);
+        }
+        std::cout << list.isSorted() << "\n";
+        //list.display_forward();
+        auto begin = std::chrono::steady_clock::now();
+        BinarySortSLL(list);
+        auto end = std::chrono::steady_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0;
+        //list.display_forward();
+        //list.display_forward();
+        std::cout << "Time: " << duration << " seconds" << std::endl;
+        totalTime += duration;
+        std::cout << list.isSorted() << "\n";
     }
-    std::cout << list.isSorted() << "\n";
-    //list.display_forward();
-    auto begin = std::chrono::steady_clock::now();
-    BinarySortSLL(list);
-    auto end = std::chrono::steady_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0;
-    //list.display_forward();
-    //list.display_forward();
-    std::cout << "Time: " << duration << " seconds" << std::endl;
-    std::cout << list.isSorted() << "\n";
+    std::cout << "Average time: " << totalTime / 100 << std::endl;
     
     
-    DoublyLinkedList dList;
-    for (int i = 0; i < 100000; i++)
-    {
-        dList.add(i, i);
-    }
-    //dList.display_forward();
-    //dList.display_backward();
+    //DoublyLinkedList dList;
+    //for (int i = 0; i < 100000; i++)
+    //{
+    //    dList.add(rand() % 100000, 0);
+    //}
+    ////dList.display_forward();
+    ////dList.display_backward();
 
-    std::cout << dList.isSorted() << "\n";
-    auto begind = std::chrono::steady_clock::now();
-    BinarySortDLL(dList);
-    auto endd = std::chrono::steady_clock::now();
-    auto durationd = std::chrono::duration_cast<std::chrono::microseconds>(endd - begind).count() / 1000000.0;
-    //dList.display_forward();
-    //dList.display_backward();
-    std::cout << "Time: " << durationd << " seconds" << std::endl;
-    std::cout << dList.isSorted() << "\n";
+    //std::cout << dList.isSorted() << "\n";
+    //auto begind = std::chrono::steady_clock::now();
+    //BinarySortDLL(dList);
+    //auto endd = std::chrono::steady_clock::now();
+    //auto durationd = std::chrono::duration_cast<std::chrono::microseconds>(endd - begind).count() / 1000000.0;
+    ////dList.display_forward();
+    ////dList.display_backward();
+    //std::cout << "Time: " << durationd << " seconds" << std::endl;
+    //std::cout << dList.isSorted() << "\n";
 
 
     //list.display_forward();
