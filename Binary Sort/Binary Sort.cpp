@@ -71,6 +71,10 @@ public:
         {
             return false;
         }
+        if (oldPos == newPos)
+        {
+            return true;
+        }
 
         Node* oldNodeNeighbor;
         Node* nodeToMove;
@@ -152,6 +156,18 @@ public:
         }
         std::cout << std::endl;
     }
+
+    bool isSorted()
+    {
+        Node* ref = head;
+        for (int i = 0; i < length - 1; i++)
+        {
+            if (ref->getNext()->getData() < ref->getData())
+                return false;
+            ref = ref->getNext();
+        }
+        return true;
+    }
 };
 
 class DoublyLinkedList {
@@ -196,7 +212,7 @@ public:
         length += 1;
         return true;
     }
-    bool move(int oldPos, int newPos)
+    bool move(int oldPos, int newPos, Node* nodeToMove, Node* newNodeNeighborRight)
     {
         if (oldPos > length - 1 || newPos > length - 1 || newPos < 0 || oldPos < 0)
         {
@@ -206,16 +222,19 @@ public:
         {
             return true;
         }
-
+        if (newPos > oldPos)
+        {
+            newNodeNeighborRight = newNodeNeighborRight->getNext();
+        }
         // Declaring pointers
-        Node* oldNodeNeighborLeft = head;
-        Node* nodeToMove;
-        Node* oldNodeNeighborRight;
-        Node* newNodeNeighborLeft = head;
-        Node* newNodeNeighborRight;
+        Node* oldNodeNeighborLeft = nodeToMove->getPrev();
+        //Node* nodeToMove;
+        Node* oldNodeNeighborRight = nodeToMove->getNext();
+        Node* newNodeNeighborLeft = newNodeNeighborRight->getPrev();
+        //Node* newNodeNeighborRight;
         
         // Defining pointers
-        for (int i = 0; i < oldPos - 1; i++)
+        /*for (int i = 0; i < oldPos - 1; i++)
         {
             oldNodeNeighborLeft = oldNodeNeighborLeft->getNext();
         }
@@ -230,7 +249,7 @@ public:
         {
             newNodeNeighborLeft = newNodeNeighborLeft->getNext();
         }
-        newNodeNeighborRight = newNodeNeighborLeft->getNext();
+        newNodeNeighborRight = newNodeNeighborLeft->getNext();*/
 
         // Fixing up the old position
         if (oldPos == 0)
@@ -340,6 +359,25 @@ public:
     {
         return length;
     }
+
+    bool isSorted()
+    {
+        Node* ref = head;
+        for (int i = 0; i < length - 1; i++)
+        {
+            if (ref->getNext()->getData() < ref->getData())
+                return false;
+            ref = ref->getNext();
+        }
+        ref = tail;
+        for (int i = 0; i < length - 1; i++)
+        {
+            if (ref->getPrev()->getData() > ref->getData())
+                return false;
+            ref = ref->getPrev();
+        }
+        return true;
+    }
 };
 
 void BinarySortSLL(SinglyLinkedList& list)
@@ -417,9 +455,7 @@ void BinarySortDLL(DoublyLinkedList& list)
         int upperBound = i - 1;
         int currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
 
-        Node* lbPtr = list.nodeAt(lowerBound);
-        Node* ubPtr = list.nodeAtFrom(upperBound, it, i);
-        Node* chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
+        Node* chPtr = list.nodeAt(currentHalf);
 
         //SEARCH FOR LOCATION
         while (upperBound > lowerBound)
@@ -427,19 +463,15 @@ void BinarySortDLL(DoublyLinkedList& list)
             //std::cout << "\nupperBound: " << upperBound << "\nlowerBound: " << lowerBound << "\ncurrentHalf: " << currentHalf << std::endl;
             if (it->getData() == chPtr->getData())
             {
-                lbPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
                 lowerBound = currentHalf;
-                ubPtr = list.nodeAtFrom(currentHalf, ubPtr, upperBound);
                 upperBound = currentHalf;
             }
             else if (it->getData() > chPtr->getData())
             {
-                lbPtr = list.nodeAtFrom(currentHalf + 1, chPtr, currentHalf);
                 lowerBound = currentHalf + 1;
             }
             else
             {
-                ubPtr = list.nodeAtFrom(currentHalf + 1, chPtr, currentHalf);
                 upperBound = currentHalf - 1;
             }
             chPtr = list.nodeAtFrom(lowerBound + floor((upperBound - lowerBound) / 2), chPtr, currentHalf);
@@ -451,15 +483,15 @@ void BinarySortDLL(DoublyLinkedList& list)
         //MOVE NODE TO LOCATION
         //std::cout << std::endl;
         //list.display_forward();
-        if (it->getData() <= lbPtr->getData())
+        if (it->getData() <= chPtr->getData())
         {
             //std::cout << it->getData() << " is less than or equal to " << lbPtr->getData() << std::endl;
-            list.move(i, lowerBound);
+            list.move(i, currentHalf, it, chPtr);
         }
         else
         {
             //std::cout << it->getData() << " is greater than " << lbPtr->getData() << std::endl;
-            list.move(i, lowerBound + 1);
+            list.move(i, currentHalf + 1, it, chPtr->getNext());
         }
         //list.display_forward();
         //std::cout << std::endl;
@@ -474,8 +506,9 @@ int main()
     SinglyLinkedList list;
     for (int i = 0; i < 100000; i++)
     {
-        list.add(1, i);
+        list.add(i, i);
     }
+    std::cout << list.isSorted() << "\n";
     //list.display_forward();
     auto begin = std::chrono::steady_clock::now();
     BinarySortSLL(list);
@@ -484,16 +517,18 @@ int main()
     //list.display_forward();
     //list.display_forward();
     std::cout << "Time: " << duration << " seconds" << std::endl;
+    std::cout << list.isSorted() << "\n";
     
     
     DoublyLinkedList dList;
     for (int i = 0; i < 100000; i++)
     {
-        dList.add(1, i);
+        dList.add(i, i);
     }
     //dList.display_forward();
     //dList.display_backward();
 
+    std::cout << dList.isSorted() << "\n";
     auto begind = std::chrono::steady_clock::now();
     BinarySortDLL(dList);
     auto endd = std::chrono::steady_clock::now();
@@ -501,6 +536,7 @@ int main()
     //dList.display_forward();
     //dList.display_backward();
     std::cout << "Time: " << durationd << " seconds" << std::endl;
+    std::cout << dList.isSorted() << "\n";
 
 
     //list.display_forward();
