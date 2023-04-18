@@ -463,28 +463,41 @@ int main()
 {
     srand(time(NULL));
     double totalTime = 0;
+    std::cout << "Starting sort test for singly linked list";
     for (int j = 0; j < 100; j++)
     {
+        if (j % 10 == 0)
+        {
+            std::cout << ".";
+        }
         SinglyLinkedList list;
         for (int i = 0; i < 20000; i++)
         {
             list.add(rand() % 20000, 0);
         }
-        std::cout << list.isSorted() << "\n";
         //list.display_forward();
         auto begin = std::chrono::steady_clock::now();
         BinarySortSLL(list);
         auto end = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0;
         //list.display_forward();
-        std::cout << "Time: " << duration << " seconds" << std::endl;
+        //std::cout << "Time: " << duration << " seconds" << std::endl;
         totalTime += duration;
-        std::cout << list.isSorted() << "\n";
+        if (!list.isSorted())
+        {
+            std::cout << "\nERROR: List is not sorted!";
+            break;
+        }
     }
-    std::cout << "Average time SLL: " << totalTime / 100 << std::endl;
+    std::cout << "\nAverage time SLL: " << totalTime / 100 << std::endl;
 	totalTime = 0;
+    std::cout << "\nStarting sort test for doubly linked list";
 	for (int j = 0; j < 100; j++)
 	{
+        if (j % 10 == 0)
+        {
+            std::cout << ".";
+        }
 		DoublyLinkedList dList;
 		for (int i = 0; i < 20000; i++)
 		{
@@ -492,16 +505,19 @@ int main()
 		}
 		//dList.display_forward();
 		//dList.display_backward();
-		std::cout << dList.isSorted() << "\n";
 		auto begind = std::chrono::steady_clock::now();
 		BinarySortDLL(dList);
 		auto endd = std::chrono::steady_clock::now();
 		auto durationd = std::chrono::duration_cast<std::chrono::microseconds>(endd - begind).count() / 1000000.0;
 		//dList.display_forward();
 		//dList.display_backward();
-		std::cout << "Time: " << durationd << " seconds" << std::endl;
+		//std::cout << "Time: " << durationd << " seconds" << std::endl;
 		totalTime += durationd;
-		std::cout << dList.isSorted() << "\n";
+        if (!dList.isSorted())
+        {
+            std::cout << "\nERROR: List is not sorted!";
+            break;
+        }
 	}
-    std::cout << "Average time SLL: " << totalTime / 100 << std::endl;
+    std::cout << "\nAverage time DLL: " << totalTime / 100 << std::endl;
 }
