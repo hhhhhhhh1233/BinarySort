@@ -41,9 +41,7 @@ public:
         {
             return false;
         }
-
         Node* node = new Node(data);
-
         Node* ref = head;
         for (int i = 0; i < pos - 1; i++)
         {
@@ -57,7 +55,6 @@ public:
             }
             head = node;
         }
-
         if (pos > 0 && pos < length)
         {
             node->setNext(ref->getNext());
@@ -68,7 +65,6 @@ public:
             if (pos != 0)
                 ref->setNext(node);
         }
-
         length += 1;
         return true;
     }
@@ -82,18 +78,15 @@ public:
         {
             return true;
         }
-
         Node* oldNodeNeighbor;
         Node* nodeToMove;
         Node* newNodeNeighbor;
-        
         oldNodeNeighbor = head;
         for (int i = 0; i < (oldPos - 1); i++)
         {
             oldNodeNeighbor = oldNodeNeighbor->getNext();
         }
         nodeToMove = oldNodeNeighbor->getNext();
-
         if (oldPos != 0)
         {
             oldNodeNeighbor->setNext(nodeToMove->getNext());
@@ -103,15 +96,12 @@ public:
             nodeToMove = head;
             head = head->getNext();
         }
-
         newNodeNeighbor = head;
         for (int i = 0; i < (newPos - 1); i++)
         {
             newNodeNeighbor = newNodeNeighbor->getNext();
         }
-
         nodeToMove->setNext(newNodeNeighbor->getNext());
-
         if (newPos == 0)
         {
             Node* temp = head;
@@ -163,7 +153,6 @@ public:
         }
         std::cout << std::endl;
     }
-
     bool isSorted()
     {
         Node* ref = head;
@@ -193,12 +182,10 @@ public:
     {
         if (pos > length)
             return false;
-
         Node* node = new Node(data);
         Node* ref = head;
         for (int i = 0; i < pos - 1; i++)
             ref = ref->getNext();
-
         if (pos == 0)
         {
             if (length > 0)
@@ -242,29 +229,8 @@ public:
         }
         // Declaring pointers
         Node* oldNodeNeighborLeft = nodeToMove->getPrev();
-        //Node* nodeToMove;
         Node* oldNodeNeighborRight = nodeToMove->getNext();
         Node* newNodeNeighborLeft = newNodeNeighborRight->getPrev();
-        //Node* newNodeNeighborRight;
-        
-        // Defining pointers
-        /*for (int i = 0; i < oldPos - 1; i++)
-        {
-            oldNodeNeighborLeft = oldNodeNeighborLeft->getNext();
-        }
-        nodeToMove = oldNodeNeighborLeft->getNext();
-        oldNodeNeighborRight = nodeToMove->getNext();
-
-        for (int i = 0; i < newPos - 1; i++)
-        {
-            newNodeNeighborLeft = newNodeNeighborLeft->getNext();
-        }
-        if (newPos > oldPos)
-        {
-            newNodeNeighborLeft = newNodeNeighborLeft->getNext();
-        }
-        newNodeNeighborRight = newNodeNeighborLeft->getNext();*/
-
         // Fixing up the old position
         if (oldPos == 0)
         {
@@ -283,7 +249,6 @@ public:
             oldNodeNeighborLeft->setNext(oldNodeNeighborRight);
             oldNodeNeighborRight->setPrev(oldNodeNeighborLeft);
         }
-
         // Fixing up the new position
         if (newPos == 0)
         {
@@ -306,10 +271,8 @@ public:
             nodeToMove->setPrev(newNodeNeighborLeft);
             nodeToMove->setNext(newNodeNeighborRight);
         }
-
         return true;
     }
-    
     Node* nodeAt(int pos)
     {
         if (pos > length - 1)
@@ -319,7 +282,6 @@ public:
             ref = ref->getNext();
         return ref;
     }
-    
     Node* nodeAtFrom(int pos, Node* startingNode, int startingNodeIndex)
     {
         if (pos > length - 1)
@@ -346,7 +308,6 @@ public:
         }
         return startingNode;
     }
-
     void display_forward()
     {
         Node* ref = head;
@@ -357,7 +318,6 @@ public:
         }
         std::cout << std::endl;
     }
-
     void display_backward()
     {
         Node* ref = tail;
@@ -368,12 +328,10 @@ public:
         }
         std::cout << std::endl;
     }
-
     int size()
     {
         return length;
     }
-
     bool isSorted()
     {
         Node* ref = head;
@@ -396,65 +354,57 @@ public:
 
 void BinarySortSLL(SinglyLinkedList& list)
 {
-    //std::cout << "--- Starting sort! ---\n";
-    Node* it = list.nodeAt(0);
-    for (int i = 0; i < list.size(); i++)
-    {
-        //std::cout << "Handling " << it->getData() << " at index " << i;
-        
-        int lowerBound = 0;
-        int upperBound = i - 1;
-        int currentHalf = lowerBound + floor((upperBound - lowerBound)/2);
-
-        Node* lbPtr = list.nodeAt(lowerBound);
-        //Node* ubPtr = list.nodeAtFrom(upperBound, lbPtr, lowerBound);
-        Node* chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
-
-        //SEARCH FOR LOCATION
-        while (upperBound > lowerBound)
-        {
-            //std::cout << "\nupperBound: " << upperBound << "\nlowerBound: " << lowerBound << "\ncurrentHalf: " << currentHalf << std::endl;
-            if (it->getData() == chPtr->getData())
-            {
-                lbPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
-                lowerBound = currentHalf;
-                //ubPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
-                upperBound = currentHalf;
-            }
-            else if (it->getData() > chPtr->getData())
-            {
-                lbPtr = list.nodeAtFrom(currentHalf + 1, chPtr, currentHalf);
-                lowerBound = currentHalf + 1;
-            }
-            else
-            {
-                //ubPtr = list.nodeAtFrom(currentHalf + 1, chPtr, currentHalf);
-                upperBound = currentHalf - 1;
-            }
-            currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
-            chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
-        }
-        
-        Node* nextIter = it->getNext();
-
-        //MOVE NODE TO LOCATION
-        //std::cout << std::endl;
-        //list.display_forward();
-        if (it->getData() <= lbPtr->getData())
-        {
-            //std::cout << it->getData() << " is less than or equal to " << lbPtr->getData() << std::endl;
-            list.move(i, lowerBound);
-        }
-        else
-        {
-            //std::cout << it->getData() << " is greater than " << lbPtr->getData() << std::endl;
-            list.move(i, lowerBound + 1);
-        }
-        //list.display_forward();
-        //std::cout << std::endl;
-        it = nextIter;
-    }
-    //std::cout << "--- Sorted! ---\n";
+	//std::cout << "--- Starting sort! ---\n";
+	Node* it = list.nodeAt(0);
+	for (int i = 0; i < list.size(); i++)
+	{
+		//std::cout << "Handling " << it->getData() << " at index " << i;
+		int lowerBound = 0;
+		int upperBound = i - 1;
+		int currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
+		Node* lbPtr = list.nodeAt(lowerBound);
+		Node* chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
+		//SEARCH FOR LOCATION
+		while (upperBound > lowerBound)
+		{
+			//std::cout << "\nupperBound: " << upperBound << "\nlowerBound: " << lowerBound << "\ncurrentHalf: " << currentHalf << std::endl;
+			if (it->getData() == chPtr->getData())
+			{
+				lbPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
+				lowerBound = currentHalf;
+				upperBound = currentHalf;
+			}
+			else if (it->getData() > chPtr->getData())
+			{
+				lbPtr = list.nodeAtFrom(currentHalf + 1, chPtr, currentHalf);
+				lowerBound = currentHalf + 1;
+			}
+			else
+			{
+				upperBound = currentHalf - 1;
+			}
+			currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
+			chPtr = list.nodeAtFrom(currentHalf, lbPtr, lowerBound);
+		}
+		Node* nextIter = it->getNext();
+		//MOVE NODE TO LOCATION
+		//std::cout << std::endl;
+		//list.display_forward();
+		if (it->getData() <= lbPtr->getData())
+		{
+			//std::cout << it->getData() << " is less than or equal to " << lbPtr->getData() << std::endl;
+			list.move(i, lowerBound);
+		}
+		else
+		{
+			//std::cout << it->getData() << " is greater than " << lbPtr->getData() << std::endl;
+			list.move(i, lowerBound + 1);
+		}
+		//list.display_forward();
+		//std::cout << std::endl;
+		it = nextIter;
+	}
+	//std::cout << "--- Sorted! ---\n";
 }
 
 void BinarySortDLL(DoublyLinkedList& list)
@@ -464,13 +414,10 @@ void BinarySortDLL(DoublyLinkedList& list)
     for (int i = 0; i < list.size(); i++)
     {
         //std::cout << "Handling " << it->getData() << " at index " << i;
-
         int lowerBound = 0;
         int upperBound = i - 1;
         int currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
-
         Node* chPtr = list.nodeAt(currentHalf);
-
         //SEARCH FOR LOCATION
         while (upperBound > lowerBound)
         {
@@ -491,9 +438,7 @@ void BinarySortDLL(DoublyLinkedList& list)
             chPtr = list.nodeAtFrom(lowerBound + floor((upperBound - lowerBound) / 2), chPtr, currentHalf);
             currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
         }
-
         Node* nextIter = it->getNext();
-
         //MOVE NODE TO LOCATION
         //std::cout << std::endl;
         //list.display_forward();
@@ -532,33 +477,31 @@ int main()
         auto end = std::chrono::steady_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() / 1000000.0;
         //list.display_forward();
-        //list.display_forward();
         std::cout << "Time: " << duration << " seconds" << std::endl;
         totalTime += duration;
         std::cout << list.isSorted() << "\n";
     }
-    std::cout << "Average time: " << totalTime / 100 << std::endl;
-    
-    
-    //DoublyLinkedList dList;
-    //for (int i = 0; i < 100000; i++)
-    //{
-    //    dList.add(rand() % 100000, 0);
-    //}
-    ////dList.display_forward();
-    ////dList.display_backward();
-
-    //std::cout << dList.isSorted() << "\n";
-    //auto begind = std::chrono::steady_clock::now();
-    //BinarySortDLL(dList);
-    //auto endd = std::chrono::steady_clock::now();
-    //auto durationd = std::chrono::duration_cast<std::chrono::microseconds>(endd - begind).count() / 1000000.0;
-    ////dList.display_forward();
-    ////dList.display_backward();
-    //std::cout << "Time: " << durationd << " seconds" << std::endl;
-    //std::cout << dList.isSorted() << "\n";
-
-
-    //list.display_forward();
-    //list.display_backward();
+    std::cout << "Average time SLL: " << totalTime / 100 << std::endl;
+	totalTime = 0;
+	for (int j = 0; j < 100; j++)
+	{
+		DoublyLinkedList dList;
+		for (int i = 0; i < 20000; i++)
+		{
+			dList.add(rand() % 20000, 0);
+		}
+		//dList.display_forward();
+		//dList.display_backward();
+		std::cout << dList.isSorted() << "\n";
+		auto begind = std::chrono::steady_clock::now();
+		BinarySortDLL(dList);
+		auto endd = std::chrono::steady_clock::now();
+		auto durationd = std::chrono::duration_cast<std::chrono::microseconds>(endd - begind).count() / 1000000.0;
+		//dList.display_forward();
+		//dList.display_backward();
+		std::cout << "Time: " << durationd << " seconds" << std::endl;
+		totalTime += durationd;
+		std::cout << dList.isSorted() << "\n";
+	}
+    std::cout << "Average time SLL: " << totalTime / 100 << std::endl;
 }
