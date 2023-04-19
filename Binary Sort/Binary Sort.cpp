@@ -35,6 +35,19 @@ public:
         length = 0;
         head = nullptr;
     }
+    ~SinglyLinkedList()
+    {
+        while (length > 0)
+        {
+            Node* ref = head;
+            for (int i = 0; i < length - 1; i++)
+            {
+                ref = ref->getNext();
+            }
+            delete ref;
+            length--;
+        }
+    }
     bool add(int data, int pos)
     {
         if (pos > length || pos < 0)
@@ -177,6 +190,16 @@ public:
         head = nullptr;
         tail = nullptr;
         length = 0;
+    }
+    ~DoublyLinkedList()
+    {
+        Node* ref = head;
+        for (int i = 0; i < length - 1; i++)
+        {
+            ref = ref->getNext();
+            delete ref->getPrev();
+        }
+        delete ref;
     }
     bool add(int data, int pos)
     {
@@ -417,7 +440,9 @@ void BinarySortDLL(DoublyLinkedList& list)
         int lowerBound = 0;
         int upperBound = i - 1;
         int currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
+        
         Node* chPtr = list.nodeAt(currentHalf);
+
         //SEARCH FOR LOCATION
         while (upperBound > lowerBound)
         {
@@ -438,7 +463,9 @@ void BinarySortDLL(DoublyLinkedList& list)
             chPtr = list.nodeAtFrom(lowerBound + floor((upperBound - lowerBound) / 2), chPtr, currentHalf);
             currentHalf = lowerBound + floor((upperBound - lowerBound) / 2);
         }
+
         Node* nextIter = it->getNext();
+
         //MOVE NODE TO LOCATION
         //std::cout << std::endl;
         //list.display_forward();
@@ -461,7 +488,7 @@ void BinarySortDLL(DoublyLinkedList& list)
 
 int main()
 {
-    int randomNums = 6000;
+    int randomNums = 30000;
     srand(time(NULL));
     double totalTime = 0;
     std::cout << "Starting sort test for singly linked list";
