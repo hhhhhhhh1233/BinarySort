@@ -461,19 +461,17 @@ void BinarySortDLL(DoublyLinkedList& list)
 
 int main()
 {
+    int randomNums = 6000;
     srand(time(NULL));
     double totalTime = 0;
     std::cout << "Starting sort test for singly linked list";
-    for (int j = 0; j < 100; j++)
+    for (int j = 0; j < 10; j++)
     {
-        if (j % 10 == 0)
-        {
-            std::cout << ".";
-        }
+        std::cout << ".";
         SinglyLinkedList list;
-        for (int i = 0; i < 20000; i++)
+        for (int i = 0; i < randomNums; i++)
         {
-            list.add(rand() % 20000, 0);
+            list.add(rand() % randomNums, 0);
         }
         //list.display_forward();
         auto begin = std::chrono::steady_clock::now();
@@ -492,16 +490,13 @@ int main()
     std::cout << "\nAverage time SLL: " << totalTime / 100 << std::endl;
 	totalTime = 0;
     std::cout << "\nStarting sort test for doubly linked list";
-	for (int j = 0; j < 100; j++)
+	for (int j = 0; j < 10; j++)
 	{
-        if (j % 10 == 0)
-        {
-            std::cout << ".";
-        }
+        std::cout << ".";
 		DoublyLinkedList dList;
-		for (int i = 0; i < 20000; i++)
+		for (int i = 0; i < randomNums; i++)
 		{
-			dList.add(rand() % 20000, 0);
+			dList.add(rand() % randomNums, 0);
 		}
 		//dList.display_forward();
 		//dList.display_backward();
